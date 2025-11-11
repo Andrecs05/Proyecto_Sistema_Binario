@@ -32,7 +32,7 @@ def plot_potential_contours(phi, M1, M2, a, size = 4.0, res = 400, levels = 50, 
     plt.legend(loc='best')
     plt.show()
 
-def plot_potential_transverse(phi, x, y, y0=0, point_masses=True, M1=1.0, M2=1.0, R_star1=0.1, R_star2=0.1):
+def plot_potential_transverse(phi, x, y, y0=0, point_masses=True, M1=1.0, M2=1.0, R_star1=0.1, R_star2=0.1, a=1.0):
     """
     Plot transverse cut of the gravitational potential at y = y0.
     """
@@ -41,13 +41,13 @@ def plot_potential_transverse(phi, x, y, y0=0, point_masses=True, M1=1.0, M2=1.0
     plt.figure(figsize=(8, 6))
     plt.plot(x, phi[idx, :], label=f'y = {y0}')
     if point_masses:
-        a1 = M2 * (M1 + M2) / (M1 + M2)  # M1 position (right of COM)
-        a2 = M1 * (M1 + M2) / (M1 + M2)  # M2 position (left of COM)
+        a1 = M2 * a / (M1 + M2)  # M1 position (right of COM)
+        a2 = M1 * a / (M1 + M2)  # M2 position (left of COM)
         plt.axvline(x=a1, color='r', linestyle='--', label=f'M1 = {M1}')
         plt.axvline(x=-a2, color='b', linestyle='--', label=f'M2 = {M2}')
     else:
-        a1 = M2 * (M1 + M2) / (M1 + M2)  # M1 position (right of COM)
-        a2 = M1 * (M1 + M2) / (M1 + M2)  # M2 position (left of COM)
+        a1 = M2 * a / (M1 + M2)  # M1 position (right of COM)
+        a2 = M1 * a / (M1 + M2)  # M2 position (left of COM)
         plt.axvspan(a1 - R_star1, a1 + R_star1, color='r', alpha=0.3, label='Star 1 Surface')
         plt.axvspan(-a2 - R_star2, -a2 + R_star2, color='b', alpha=0.3, label='Star 2 Surface')
     plt.xlabel('x')

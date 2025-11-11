@@ -87,7 +87,7 @@ def binary_potential_poisson_fd(M1, M2, R_star1, R_star2, a, G, L, grid_size):
     diagonals = [main_diag, off_diag1_r, off_diag1_l, off_diagN, off_diagN]
     offsets = [0, -1, 1, -N, N]
 
-    A = diags(diagonals, offsets, shape=(N_total, N_total), format='csr')
+    A = diags(diagonals, offsets, shape=(N_total, N_total), format='lil')
     b = 4 * np.pi * G * rho.flatten() * h**2
 
     switching_radius = a + max(R_star1, R_star2)  # Or any radius you choose
@@ -105,6 +105,8 @@ def binary_potential_poisson_fd(M1, M2, R_star1, R_star2, a, G, L, grid_size):
                 A[k, :] = 0
                 A[k, k] = 1
                 b[k] = phi_boundary
+
+    A = A.tocsr()
 
     phi = spsolve(A, b)
     phi = phi.reshape((N, N))
