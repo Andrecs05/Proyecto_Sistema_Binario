@@ -88,7 +88,7 @@ def plot_field_streamlines(g_x, g_y, X, Y, M1, M2, a, density=1.5, point_masses=
     a2 = M1 * a / (M1 + M2)  # M2 position (left of COM)
 
     plt.figure(figsize=(8, 6))
-    plt.contourf(X, Y, g_magnitude, levels=50, cmap=cm.plasma)
+    plt.contourf(X, Y, g_magnitude, levels=100, cmap=cm.plasma)
     plt.colorbar(label='Gravitational Field Magnitude')
     if point_masses:
         plt.plot(a1, 0, 'ro', markersize=8, label=f'M1 = {M1}')
@@ -103,5 +103,18 @@ def plot_field_streamlines(g_x, g_y, X, Y, M1, M2, a, density=1.5, point_masses=
     plt.ylabel('y')
     plt.title('Gravitational Field Streamlines')
     plt.axis('equal')
-    plt.legend(loc='best')
+    plt.legend(loc='upper right')
+    plt.show()
+
+def plot_binary_potential_3D(phi, X, Y):
+    """
+    Plot the 3D gravitational potential.
+    """
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(X, Y, phi, cmap=cm.plasma, edgecolor='none')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Gravitational Potential')
+    ax.set_title('3D Gravitational Potential')
     plt.show()
