@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from scripts.solvers import *
 
 def plot_potential_contours(phi, M1, M2, a, size = 4.0, res = 400, levels = 50, point_masses=True, R_star1=0.1, R_star2=0.1):
     """
@@ -19,9 +20,11 @@ def plot_potential_contours(phi, M1, M2, a, size = 4.0, res = 400, levels = 50, 
     if point_masses:
         plt.plot(a1, 0, 'ro', markersize=8, label=f'M1 = {M1}')
         plt.plot(-a2, 0, 'bo', markersize=8, label=f'M2 = {M2}')
+        plt.plot(0, 0, 'k+', markersize=8, label='Center of Mass')
     else:
         circle1 = plt.Circle((a1, 0), R_star1, color='r', fill=False, linestyle='-', label=f'Star 1 Surface, M1={M1}')
         circle2 = plt.Circle((-a2, 0), R_star2, color='b', fill=False, linestyle='-', label=f'Star 2 Surface, M2={M2}')
+        plt.plot(0, 0, 'k+', markersize=8, label='Center of Mass')
         plt.gca().add_artist(circle1)
         plt.gca().add_artist(circle2)
     plt.colorbar(contour, label='Gravitational Potential')
@@ -88,7 +91,7 @@ def plot_field_streamlines(g_x, g_y, X, Y, M1, M2, a, density=1.5, point_masses=
     a2 = M1 * a / (M1 + M2)  # M2 position (left of COM)
 
     plt.figure(figsize=(8, 6))
-    plt.contourf(X, Y, g_magnitude, levels=100, cmap=cm.plasma)
+    plt.contourf(X, Y, g_magnitude, levels=20, cmap=cm.plasma)
     plt.colorbar(label='Gravitational Field Magnitude')
     if point_masses:
         plt.plot(a1, 0, 'ro', markersize=8, label=f'M1 = {M1}')
@@ -96,6 +99,7 @@ def plot_field_streamlines(g_x, g_y, X, Y, M1, M2, a, density=1.5, point_masses=
     else:
         circle1 = plt.Circle((a1, 0), R_star1, color='r', fill=False, linestyle='-', label='Star 1 Surface')
         circle2 = plt.Circle((-a2, 0), R_star2, color='b', fill=False, linestyle='-', label='Star 2 Surface')
+        plt.plot(0, 0, 'k+', markersize=8, label='Center of Mass')
         plt.gca().add_artist(circle1)
         plt.gca().add_artist(circle2)
     strm = plt.streamplot(X, Y, g_x, g_y, color='w', linewidth=1, density=density, arrowsize=1)
@@ -112,9 +116,40 @@ def plot_binary_potential_3D(phi, X, Y):
     """
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot_surface(X, Y, phi, cmap=cm.plasma, edgecolor='none')
+    ax.plot_surface(X, Y, phi, cmap=cm.plasma.reversed(), edgecolor='none')
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Gravitational Potential')
     ax.set_title('3D Gravitational Potential')
+    plt.show()
+
+def plot_binary_equipotentials(phi, M1, M2, a, levels=10, point_masses=True, R_star1=0.1, R_star2=0.1, size=4.0, res=400):
+    """
+    Plot equipotential lines of the gravitational potential.
+    """
+    x = np.linspace(-size, size, res)
+    y = np.linspace(-size, size, res)
+    X, Y = np.meshgrid(x, y)
+    
+    a1 = M2 * a / (M1 + M2)  # M1 position (right of COM)
+    a2 = M1 * a / (M1 + M2)  # M2 position (left of COM)
+
+    plt.figure(figsize=(8, 6))
+    plt.contour(X, Y, phi, levels=levels, colors='white', linewidths=0.5)
+    plt.contourf(X, Y, phi, levels=levels*6, cmap=cm.magma.reversed())
+    plt.colorbar(label='Gravitational Potential')
+    plt.plot(0, 0, 'k+', markersize=8, label='Center of Mass')
+    if point_masses:
+        plt.plot(a1, 0, 'ro', markersize=8, label=f'M1 = {M1}')
+        plt.plot(-a2, 0, 'bo', markersize=8, label=f'M2 = {M2}')
+    else:
+        circle1 = plt.Circle((a1, 0), R_star1, color='r', fill=False, linestyle='-', label=f'Star 1 Surface, M1={M1}')
+        circle2 = plt.Circle((-a2, 0), R_star2, color='b', fill=False, linestyle='-', label=f'Star 2 Surface, M2={M2}')
+        plt.gca().add_artist(circle1)
+        plt.gca().add_artist(circle2)
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('Gravitational Potential')
+    plt.axis('equal')
+    plt.legend(loc='best')
     plt.show()
